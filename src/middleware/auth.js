@@ -7,6 +7,9 @@ exports.verify = async (ctx, next) => {
             ctx.body = "로그인을 해야합니다.";
             return;
         }
+        else{
+            ctx.state.userId = decoded.userId;
+        }
         await next();
     })
 }

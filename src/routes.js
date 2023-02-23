@@ -17,10 +17,16 @@ router.use(myLogging);
 router.get('/', webController.home);
 router.get('/page/:page', webController.page);
 
+//로그인
 router.post('/api/user/login', apiUserController.login);
+//회원가입
 router.post('/api/user/register', apiUserController.register);
 
-router.use(verify)
-router.get('/api/user/:id', apiUserController.info);
+// 로그인 검증이 필요한 서비스 ↓↓↓
+router.use(verify)  // 로그인 검증
+// 유저 정보 검색
+router.get('/api/user', apiUserController.info);
+// 회원 탈퇴
+router.delete('/api/user', apiUserController.signOut);
 
 module.exports = router;
