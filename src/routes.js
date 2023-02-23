@@ -11,6 +11,7 @@ const { verify } = require('./middleware/auth');
 
 const webController = require('./web/controller');
 const apiUserController = require('./api/user/controller');
+const apiPrintController = require('./api/print/controller');
 
 router.use(myLogging);
 
@@ -24,9 +25,13 @@ router.post('/api/user/register', apiUserController.register);
 
 // 로그인 검증이 필요한 서비스 ↓↓↓
 router.use(verify)  // 로그인 검증
+
 // 유저 정보 검색
 router.get('/api/user', apiUserController.info);
 // 회원 탈퇴
 router.delete('/api/user', apiUserController.signOut);
+
+// 인쇄 문서 제출
+router.post('/api/print', apiPrintController.submitPrint);
 
 module.exports = router;
