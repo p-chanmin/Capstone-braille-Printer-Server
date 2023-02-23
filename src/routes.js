@@ -33,5 +33,6 @@ router.delete('/api/user', apiUserController.signOut);
 
 // 인쇄 문서 제출
 router.post('/api/print', apiPrintController.submitPrint);
+router.get('/api/print', apiPrintController.getPrintHistory);
 
 module.exports = router;

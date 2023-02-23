@@ -14,12 +14,14 @@ exports.submitPrint = async (user_id, title, page) => {
     return await pool(query, [user_id, title, page]);
 }
 
-
-
-
-exports.findUserbyEmail = async (email) => {
-    const query = `SELECT * FROM user WHERE email = ?`;
-    let result = await pool(query, [email]);
-    return (result.length < 0) ? null : result[0]
+/**
+ * 해당 유저의 인쇄 기록을 불러오기
+ * @param {Int} user_id 
+ * @returns 
+ */
+exports.getPrintHistory = async (user_id) => {
+    const query = `select * from print where user_id = ?`;
+    let result = await pool(query, [user_id]);
+    return (result.length < 0) ? null : result
 }
 

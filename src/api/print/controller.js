@@ -3,17 +3,16 @@ const PrintRepo = require('./query');
 const crypto = require('crypto');
 
 
-/** 해당 id의 회원정보들 */
-exports.info = async (ctx, next) => {
+/** 해당 id의 회원의 인쇄 기록 */
+exports.getPrintHistory = async (ctx, next) => {
     let { userId } = ctx.state;
 
-    let result = await UserRepo.findUserbyId(userId);
+    let result = await PrintRepo.getPrintHistory(userId);
+
+    console.log(result);
 
     ctx.body = {
-        result : "ok",
-        id : result.id,
-        email : result.email,
-        name : result.name
+        result : result
     };
 }
 
