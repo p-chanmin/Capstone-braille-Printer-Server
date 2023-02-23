@@ -33,6 +33,11 @@ router.delete('/api/user', apiUserController.signOut);
 
 // 인쇄 문서 제출
 router.post('/api/print', apiPrintController.submitPrint);
+// 인쇄 문서 목록 불러오기
 router.get('/api/print', apiPrintController.getPrintHistory);
+// 인쇄 문서 상태 변경
+router.put('/api/print', apiPrintController.setPrintState);
+// 인쇄 문서 기록 삭제
+router.delete('/api/print', apiPrintController.deletePrintHistory);
 
 module.exports = router;

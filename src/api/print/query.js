@@ -25,3 +25,35 @@ exports.getPrintHistory = async (user_id) => {
     return (result.length < 0) ? null : result
 }
 
+/**
+ * 인쇄 번호로 해당 문서의 인쇄 상태 갱신
+ * @param {Int} id 문서 id
+ * @param {string} state 문서 상태
+ * @returns 
+ */
+exports.setPrintState = async (id, state) => {
+    const query = `update print set state = ? where id = ?;`;
+    return await pool(query, [state, id]);
+}
+
+/**
+ * 문서 아이디로 해당 문서 찾기
+ * @param {Int} id 문서 아이디
+ * @returns 
+ */
+exports.findPrintHistoryFromId = async (id) => {
+    const query = `select * from print where id = ?;`;
+    let result = await pool(query, [id]);
+    return (result.length < 0) ? null : result[0]
+}
+
+/**
+ * 문서 아이디로 해당 문서 기록 삭제
+ * @param {Int} id 문서 아이디
+ * @returns 
+ */
+exports.deletePrintHistory = async (id) => {
+    const query = `delete from print where id = ?`;
+    return await pool(query, [id]);
+}
+
