@@ -9,14 +9,10 @@ const upload = multer({
 const { myLogging } = require('./middleware/logging');
 const { verify } = require('./middleware/auth');
 
-const webController = require('./web/controller');
 const apiUserController = require('./api/user/controller');
 const apiPrintController = require('./api/print/controller');
 
 router.use(myLogging);
-
-router.get('/', webController.home);
-router.get('/page/:page', webController.page);
 
 //로그인
 router.post('/api/user/login', apiUserController.login);
