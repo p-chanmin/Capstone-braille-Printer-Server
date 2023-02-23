@@ -37,12 +37,22 @@ exports.signOut = async (userId) => {
     return await pool(query, [userId]);
 }
 
+/**
+ * 이메일을 통해 유저 검색
+ * @param {string} email 
+ * @returns 
+ */
 exports.findUserbyEmail = async (email) => {
     const query = `SELECT * FROM user WHERE email = ?`;
     let result = await pool(query, [email]);
     return (result.length < 0) ? null : result[0]
 }
 
+/**
+ * 유저ID를 통해 유저 검색
+ * @param {Int} userId 
+ * @returns 
+ */
 exports.findUserbyId = async (userId) => {
     const query = `SELECT * FROM user WHERE id = ?`;
     let result = await pool(query, [userId]);
