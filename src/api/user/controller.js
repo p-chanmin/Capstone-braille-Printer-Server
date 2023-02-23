@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { register, login, signOut, findUserbyId, findUserbyEmail } = require('./query');
+const UserRepo = require('./query');
 const crypto = require('crypto');
 
 
@@ -7,7 +7,7 @@ const crypto = require('crypto');
 exports.info = async (ctx, next) => {
     let { userId } = ctx.state;
 
-    let result = await findUserbyId(userId);
+    let result = await UserRepo.findUserbyId(userId);
 
     ctx.body = {
         result : "ok",
@@ -20,7 +20,7 @@ exports.info = async (ctx, next) => {
 exports.register = async (ctx, next) => {
     let { email, password, name } = ctx.request.body;
 
-    let checkEmail = await findUserbyEmail(email);
+    let checkEmail = await UserRepo.findUserbyEmail(email);
     if(checkEmail != null){
         ctx.body = {
             result : "이미 가입된 이메일입니다."
@@ -29,7 +29,7 @@ exports.register = async (ctx, next) => {
     }
 
     let result = await crypto.pbkdf2Sync(password, process.env.APP_KEY, 50, 100, 'sha512');
-    let { affectedRows, insertId } = await register(email, result.toString('base64'), name);
+    let { affectedRows, insertId } = await UserRepo.register(email, result.toString('base64'), name);
 
     if(affectedRows > 0){
         let token = await generteToken({ userId : insertId });
@@ -43,7 +43,7 @@ exports.login = async (ctx, next) => {
     let { email, password } = ctx.request.body;
     let result = await crypto.pbkdf2Sync(password, process.env.APP_KEY, 50, 100, 'sha512');
 
-    let item = await login(email, result.toString('base64'));
+    let item = await UserRepo.login(email, result.toString('base64'));
 
     if(item == null){
         ctx.body = {result: "fail"};
@@ -56,8 +56,8 @@ exports.login = async (ctx, next) => {
 /** 회원 탈퇴 */
 exports.signOut = async (ctx, next) => {
     let { userId } = ctx.state;
-    
-    let { affectedRows } = await signOut(userId);
+
+    let { affectedRows } = await UserRepo.signOut(userId);
 
     if (affectedRows > 0){
         ctx.body = {result: "SignOut success"};
