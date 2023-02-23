@@ -37,8 +37,8 @@ exports.setPrintState = async (ctx, next) => {
     let { userId } = ctx.state;
     let { id, state } = ctx.request.body;
 
+    // 유저 정보 확인
     let doc = await PrintRepo.findPrintHistoryFromId(id);
-
     if( userId != doc.user_id ){
         ctx.body = {
             result : "유저 정보가 일치하지 않습니다."
@@ -62,8 +62,8 @@ exports.deletePrintHistory = async (ctx, next) => {
     let { userId } = ctx.state;
     let { id } = ctx.request.body;
 
+    // 유저 정보 확인
     let doc = await PrintRepo.findPrintHistoryFromId(id);
-
     if( userId != doc.user_id ){
         ctx.body = {
             result : "유저 정보가 일치하지 않습니다."
