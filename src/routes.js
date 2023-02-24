@@ -14,6 +14,8 @@ const apiPrintController = require('./api/print/controller');
 
 router.use(myLogging);
 
+//메인
+router.get('/', apiUserController.main);
 //로그인
 router.post('/api/user/login', apiUserController.login);
 //회원가입

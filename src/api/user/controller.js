@@ -3,6 +3,12 @@ const UserRepo = require('./query');
 const crypto = require('crypto');
 
 
+/** 메인 */
+exports.main = async (ctx, next) => {
+    ctx.body = {
+        result : "main",
+    };
+}
 /** 해당 id의 회원정보들 */
 exports.info = async (ctx, next) => {
     let { userId } = ctx.state;
