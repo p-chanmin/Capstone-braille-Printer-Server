@@ -9,19 +9,30 @@ exports.getPrintHistory = async (ctx, next) => {
 
     let result = await PrintRepo.getPrintHistory(userId);
 
+    ctx.body = {
+        result : result
+    };
+}
+
+/** 해당 id의 인쇄 기록의 원문 가져오기 */
+exports.getPrintContent = async (ctx, next) => {
+    let { id } = ctx.request.body;
+
+    let result = await PrintRepo.getPrintContent(id);
+
     console.log(result);
 
     ctx.body = {
-        result : result
+        content : result[0].content
     };
 }
 
 /** 인쇄 문서 제출 */
 exports.submitPrint = async (ctx, next) => {
     let { userId } = ctx.state;
-    let { title, page } = ctx.request.body;
+    let { title, content, page } = ctx.request.body;
 
-    let { affectedRows } = await PrintRepo.submitPrint(userId, title, page);
+    let { affectedRows } = await PrintRepo.submitPrint(userId, title, content, page);
 
     if(affectedRows > 0){
         ctx.body = {

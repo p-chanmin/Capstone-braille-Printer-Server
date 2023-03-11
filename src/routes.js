@@ -33,9 +33,14 @@ router.delete('/api/user', apiUserController.signOut);
 router.post('/api/print', apiPrintController.submitPrint);
 // 인쇄 문서 목록 불러오기
 router.get('/api/print', apiPrintController.getPrintHistory);
+// 인쇄 문서 원문 불러오기
+router.get('/api/print/content', apiPrintController.getPrintContent);
 // 인쇄 문서 상태 변경
 router.put('/api/print', apiPrintController.setPrintState);
 // 인쇄 문서 기록 삭제
 router.delete('/api/print', apiPrintController.deletePrintHistory);
+
+// 점역 결과
+router.get('/api/braille', apiPrintController.getBrailleData);
 
 module.exports = router;

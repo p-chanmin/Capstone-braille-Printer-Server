@@ -7,11 +7,11 @@ const { pool } = require('../../data');
  * @param {Int} page 페이지 수
  * @returns 
  */
-exports.submitPrint = async (user_id, title, page) => {
+exports.submitPrint = async (user_id, title, content, page) => {
     const query = `INSERT INTO print
-    (user_id, title, page)
-    VALUES (?,?,?)`;
-    return await pool(query, [user_id, title, page]);
+    (user_id, title, content, page)
+    VALUES (?,?,?,?)`;
+    return await pool(query, [user_id, title, content, page]);
 }
 
 /**
@@ -22,6 +22,16 @@ exports.submitPrint = async (user_id, title, page) => {
 exports.getPrintHistory = async (user_id) => {
     const query = `select * from print where user_id = ?`;
     let result = await pool(query, [user_id]);
+    return (result.length < 0) ? null : result
+}
+
+/**
+ * 해당 id의 인쇄 기록을 참고하여 이전 인쇄 내용의 원문을 불러오기
+ * @param {Int} id 
+ */
+exports.getPrintContent = async (id) => {
+    const query = `select * from print where id = ?`;
+    let result = await pool(query, [id]);
     return (result.length < 0) ? null : result
 }
 
