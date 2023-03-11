@@ -103,7 +103,7 @@ exports.getBrailleData = async (ctx, next) => {
     console.log(`content : ${content}`);
     console.log(path.join(__dirname, '../../braille/braillePrint.py'));
 
-    const pythonProcess = spawn('python', [path.join(__dirname, '../../braille/braillePrint.py'), content]);
+    const pythonProcess = spawn('python3', [path.join(__dirname, '../../braille/braillePrint.py'), content]);
 
     let result = "";
 
