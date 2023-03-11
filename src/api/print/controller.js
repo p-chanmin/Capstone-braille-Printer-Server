@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const PrintRepo = require('./query');
 const crypto = require('crypto');
+const { spawn } = require('child_process');
+const path = require('path');
 
 
 /** 해당 id의 회원의 인쇄 기록 */
@@ -91,4 +93,32 @@ exports.deletePrintHistory = async (ctx, next) => {
     } else{
         ctx.body = {result: "fail"};
     }
+}
+
+/** 점자 번역 결과 */
+exports.getBrailleData = async (ctx, next) => {
+
+    let { content } = ctx.request.body;
+
+    const pythonProcess = spawn('python', [path.join(__dirname, '../../braille/braillePrint.py'), content]);
+
+    let result = "";
+
+    // 파이썬 출력 가져오기
+    pythonProcess.stdout.on('data', (data) => {
+        result += data.toString('utf-8');  // 버퍼 데이터를 문자열로 변환
+    });
+
+    // stdout의 end 이벤트를 사용하여 출력이 끝나기 전까지 대기
+    await new Promise((resolve, reject) => {
+        pythonProcess.stdout.on('end', () => {
+        resolve();
+        });
+    });
+
+    // HTTP 응답으로 전송
+    ctx.body = {
+        result: result
+    };
+  
 }
