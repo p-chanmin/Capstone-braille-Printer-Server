@@ -22,10 +22,27 @@ exports.getPrintContent = async (ctx, next) => {
 
     let result = await PrintRepo.getPrintContent(id);
 
-    console.log(result);
+    let content = result[0].content;
+
+    const pythonProcess = spawn('python3', [path.join(__dirname, '../../braille/braillePrint.py'), content]);
+
+    let braille = "";
+
+    // 파이썬 출력 가져오기
+    pythonProcess.stdout.on('data', (data) => {
+        braille += data.toString('utf-8');  // 버퍼 데이터를 문자열로 변환
+    });
+
+    // stdout의 end 이벤트를 사용하여 출력이 끝나기 전까지 대기
+    await new Promise((resolve, reject) => {
+        pythonProcess.stdout.on('end', () => {
+        resolve();
+        });
+    });
 
     ctx.body = {
-        content : result[0].content
+        content : result[0].content,
+        braille : braille
     };
 }
 
