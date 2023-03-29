@@ -25,68 +25,23 @@ def transfrom_to_braille(braille_text, horizontal = 32):
         :param horizontal: 최대 가로칸
         :return: 최대 가로칸으로 줄바꿈(\n)한 점자 문자열
     """
-    # 문자열처리를 위해 점자 공백을 일반 공백으로 변경
-    braille_text = braille_text.replace("⠀", " ")
+    # 문자열처리를 위해 양쪽 끝의 줄바꿈 표를 없애고, 점자 공백을 일반 공백으로 변경
+    braille_text = braille_text.strip('\n').replace("⠀", " ")
 
-    words = braille_text.split(" ")  # 공백으로 단어로 나눔
-    words_list = []  # 결과를 저장할 리스트
+    form = ""  # 결과를 저장할 리스트
 
-    # 가로길이에 맞게 단어 분할
-    for word in words:
-        while len(word) > horizontal:  # 단어가 horizontal글자보다 길 경우
-            words_list.append(word[:horizontal])  # horizontal글자까지 자른 후 추가
-            word = word[horizontal:]  # 나머지 단어로 다시 반복
-
-        words_list.append(word)  # horizontal글자 이하인 단어는 그대로 추가
-
-    # 최대 길이 horizontal으로 나누기
-    lines = []
-    line = ''
-    # 단어 목록을 순회하면서 줄바꿈
-    for word in words_list:
-        # 단어를 추가했을 때 가로보다 길면 라인을 추가하고, 새로운 라인 생성
-        if len(line) + len(word) + 1 > horizontal:
-            lines.append(line)
-            line = ""
-        # 단어 중간에 줄바꿈 표가 있을 경우 줄바꿈을 우선으로 라인 생성
-        if "\n" in word:
-            split_words = word.split("\n")
-            for i, split_word in enumerate(split_words):
-                if len(line) + len(split_word) + 1 > horizontal:
-                    lines.append(line)
-                    line = ""
-                else:
-                    if line:
-                        line += " "
-                    line += split_word
-        # 그렇지 않으면 공백으로 단어 추가
+    cnt = 0
+    for c in braille_text:
+        if cnt == horizontal:
+            form += '\n'
+            cnt = 0
+        form += c
+        if c == '\n':
+            cnt = 0
         else:
-            if line:
-                line += " "
-            line += word
+            cnt += 1
 
-    # 마지막 라인이 있으면 추가
-    if line:
-        lines.append(line)
-
-    # 모든 줄을 넘파이 배열로 변환
-    chunks = np.array(lines)
-
-    # 패딩할 점자 공백("⠀")
-    pad_char = "⠀"
-
-    # 각 문자열에 대해 패딩을 적용하여 가로칸을 맞춤
-    padded_array = []
-    for s in chunks:
-        if len(s) < horizontal:
-            pad_length = horizontal - len(s)
-            padded_string = s + pad_char * pad_length
-        else:
-            padded_string = s
-        # 문자열에서 공백을 데이터화 가능한 점자 공백("⠀")으로 변경
-        padded_array.append(padded_string.replace(" ", "⠀"))
-
-    return "\n".join(padded_array)
+    return form.strip('\n').replace(" ", "⠀")
 
 
 # 출력할 문자열을 utf-8로 인코딩
