@@ -51,10 +51,11 @@ exports.submitPrint = async (ctx, next) => {
     let { userId } = ctx.state;
     let { title, content, page } = ctx.request.body;
 
-    let { affectedRows } = await PrintRepo.submitPrint(userId, title, content, page);
+    let { affectedRows, insertId } = await PrintRepo.submitPrint(userId, title, content, page);
 
     if(affectedRows > 0){
         ctx.body = {
+            insertId : insertId,
             result : "success Submit"
         };
     } else{
